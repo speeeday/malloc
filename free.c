@@ -1,5 +1,5 @@
 /*
-** free.c for free in /home/nasrat_v/rendu/tek2/malloc/PSU_2020_malloc
+** free.c for free in /home/nasrat_v/rendu/tek2/sj_malloc/PSU_2020_sj_malloc
 ** 
 ** Made by Valentin Nasraty
 ** Login   <valentin.nasraty@epitech.eu>
@@ -8,16 +8,17 @@
 ** Last update Sun Feb 12 14:57:28 2017 Valentin Nasraty
 */
 
-#include "malloc.h"
+#include "sj_malloc.h"
 
-void		*base_bloc;
+void *base_bloc;
+void *prog_break;
 
-void		free(void *ptr)
+void sj_free(void *ptr)
 {
-  t_bloc	*bloc;
+  t_bloc *bloc;
 
   trylock_thread();
-  if (ptr == NULL || (bloc = get_bloc(ptr)) == NULL)
+  if (ptr == NULL || (bloc = sj_get_bloc(ptr)) == NULL)
     {
       unlock_thread();
       return;
@@ -25,10 +26,10 @@ void		free(void *ptr)
   if (bloc->data == ptr && bloc->isFree == false)
     {
       bloc->isFree = true;
-      bloc = fusion_free_bloc(bloc);
+      bloc = sj_fusion_free_bloc(bloc);
       if (bloc == base_bloc && bloc->next == NULL)
 	{
-	  brk((char*)bloc + getpagesize());
+	  prog_break = (char*)bloc + getpagesize();
 	  base_bloc = NULL;
 	}
     }

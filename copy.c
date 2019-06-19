@@ -8,13 +8,13 @@
 ** Last update Sun Feb 12 19:08:25 2017 Valentin Nasraty
 */
 
-#include "malloc.h"
+#include "sj_malloc.h"
 
-void		copy_data(t_bloc *bloc, t_bloc *new_bloc)
+void sj_copy_data(t_bloc *bloc, t_bloc *new_bloc)
 {
-  size_t       	i;
-  void     	*src;
-  void		*dest;
+  size_t i;
+  void *src;
+  void *dest;
 
   i = 0;
   src = bloc->data;
@@ -26,17 +26,17 @@ void		copy_data(t_bloc *bloc, t_bloc *new_bloc)
     }
 }
 
-t_bloc		*copy_bloc(t_bloc *bloc, size_t size)
+t_bloc *sj_copy_bloc(t_bloc *bloc, size_t size)
 {
-  void		*new_ptr;
-  t_bloc	*new_bloc;
+  void *new_ptr;
+  t_bloc *new_bloc;
 
   unlock_thread();
-  if ((new_ptr = malloc(size)) == NULL)
+  if ((new_ptr = sj_malloc(size)) == NULL)
       return (NULL);
   trylock_thread();
-  if ((new_bloc = get_bloc(new_ptr)) == NULL)
+  if ((new_bloc = sj_get_bloc(new_ptr)) == NULL)
     return (NULL);
-  copy_data(bloc, new_bloc);
+  sj_copy_data(bloc, new_bloc);
   return (new_ptr);
 }

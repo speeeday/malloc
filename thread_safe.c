@@ -1,5 +1,5 @@
 /*
-** thread_safe.c for malloc in /home/nasrat_v/Mouli/psu356malloc
+** thread_safe.c for sj_malloc in /home/nasrat_v/Mouli/psu356malloc
 ** 
 ** Made by Valentin Nasraty
 ** Login   <valentin.nasraty@epitech.eu>
@@ -8,7 +8,7 @@
 ** Last update Sun Feb 12 19:58:34 2017 Valentin Nasraty
 */
 
-#include "malloc.h"
+#include "sj_malloc.h"
 
 pthread_mutex_t		mutex = PTHREAD_MUTEX_INITIALIZER;
 

@@ -8,7 +8,7 @@
 ** Last update Sun Feb 12 23:04:42 2017 Valentin Nasraty
 */
 
-#include "malloc.h"
+#include "sj_malloc.h"
 
 void		my_putchar(char c)
 {

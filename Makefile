@@ -15,27 +15,33 @@ SRC		=  malloc.c \
 		   get_bloc.c \
 		   copy.c \
 		   thread_safe.c \
-		   show_alloc_mem.c \
 		   basic_func.c
 
 NAME		= libmy_malloc.so
 
-CFLAGS  	= -c -fpic -W -Wall -ansi -pedantic -std=gnu99
+CFLAGS  	= -c -fpic -W -Wall -ansi -pedantic -std=gnu99 -lrt
 
 CC		= cc
 
 OBJ		= $(SRC:.c=.o)
 
 all:		 $(NAME)
+		make set
+		make get
 
 $(NAME):	$(OBJ)
-		$(CC) -c -fpic $(SRC) $(CFLAGS)
-		$(CC) -shared -o $(NAME) $(OBJ) -lpthread
+		$(CC) -g -c -fpic $(SRC) $(CFLAGS) -lpthread -lrt
 
 clean:
-		rm -f $(OBJ)
+		rm -f $(OBJ) set get
 
 fclean:		clean
 		rm -f $(NAME)
 
 re: 		fclean all
+
+set:
+		gcc -g -o set set.c *.o -lrt -lpthread
+
+get:
+		gcc -g -o get get.c *.o -lrt -lpthread

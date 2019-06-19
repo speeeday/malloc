@@ -8,13 +8,14 @@
 ** Last update Sun Feb 12 16:56:18 2017 Valentin Nasraty
 */
 
-#include "malloc.h"
+#include "sj_malloc.h"
 
-void		*base_bloc;
+void *base_bloc;
+void *prog_break;
 
-void		create_rest_bloc(t_bloc *bloc, size_t size, int pagesize)
+void sj_create_rest_bloc(t_bloc *bloc, size_t size, int pagesize)
 {
-  t_bloc	*rest;
+  t_bloc *rest;
 
   rest = (t_bloc*)((size_t)bloc->data + bloc->getSize);
   rest->getSize = (__ALIGN_ADDR__(size + __HEADER_SIZE__, pagesize)
@@ -26,14 +27,18 @@ void		create_rest_bloc(t_bloc *bloc, size_t size, int pagesize)
   bloc->next = rest;
 }
 
-t_bloc          *extend_heap(t_bloc *last_bloc, size_t size)
+t_bloc *sj_extend_heap(t_bloc *last_bloc, size_t size)
 {
-  t_bloc        *bloc;
-  int		pagesize;
+  t_bloc *bloc;
+  int pagesize;
 
   pagesize = getpagesize();
-  if ((bloc =
-       sbrk(__ALIGN_ADDR__(size + __HEADER_SIZE__, pagesize))) == (void*)-1)
+  bloc = (t_bloc *)prog_break;
+  prog_break = (void *)(((char *)(prog_break)) +  __ALIGN_ADDR__(size + __HEADER_SIZE__, pagesize));
+  if (prog_break > heap_max) {
+    bloc = (void*)-1;
+  }
+  if (bloc == (void*)-1)
     return (NULL);
   if (last_bloc != NULL)
     {
@@ -45,13 +50,13 @@ t_bloc          *extend_heap(t_bloc *last_bloc, size_t size)
   bloc->getSize = size;
   bloc->isFree = false;
   bloc->data = (char*)bloc + __HEADER_SIZE__;
-  create_rest_bloc(bloc, size, pagesize);
+  sj_create_rest_bloc(bloc, size, pagesize);
   return (bloc);
 }
 
-int		split_bloc(t_bloc *this_bloc, size_t size)
+int sj_split_bloc(t_bloc *this_bloc, size_t size)
 {
-  t_bloc	*half_bloc;
+  t_bloc *half_bloc;
 
   if (this_bloc->getSize <= (size + __HEADER_SIZE__))
     return (1);
@@ -67,9 +72,9 @@ int		split_bloc(t_bloc *this_bloc, size_t size)
   return (0);
 }
 
-t_bloc          *fusion_free_bloc(t_bloc *bloc)
+t_bloc *sj_fusion_free_bloc(t_bloc *bloc)
 {
-  t_bloc	*tmp;
+  t_bloc *tmp;
 
   tmp = bloc;
   if (bloc->prev != NULL && bloc->prev->isFree == true)

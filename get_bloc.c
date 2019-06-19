@@ -8,11 +8,11 @@
 ** Last update Sun Feb 12 16:44:47 2017 Valentin Nasraty
 */
 
-#include "malloc.h"
+#include "sj_malloc.h"
 
-void		*base_bloc;
+void *base_bloc;
 
-t_bloc		*find_free_bloc(t_bloc *bloc, size_t size)
+t_bloc *sj_find_free_bloc(t_bloc *bloc, size_t size)
 {
   while (bloc != NULL)
     {
@@ -23,9 +23,9 @@ t_bloc		*find_free_bloc(t_bloc *bloc, size_t size)
   return (NULL);
 }
 
-void            *get_bloc(void *ptr)
+void *sj_get_bloc(void *ptr)
 {
-  if (ptr < sbrk(0) && ptr >= base_bloc)
+  if (ptr < prog_break && ptr >= base_bloc)
     return (ptr = (char*)ptr - __HEADER_SIZE__);
   return (NULL);
 }
